@@ -17,13 +17,29 @@ def _callback() -> None:
     """Post-flight analysis tools."""
 
 
+def _read_first_nonempty_line(p: Path) -> str:
+    with p.open("rb") as f:
+        raw = f.read(4096)
+    try:
+        text = raw.decode("utf-8-sig", errors="ignore")
+    except Exception:
+        text = raw.decode("latin-1", errors="ignore")
+    for line in text.splitlines():
+        s = line.strip()
+        if s:
+            return s
+    return ""
+
+
 def _sniff_kind(p: Path) -> str | None:
+    """Return 'telemega' | 'blueraven' | None by inspecting the header line."""
     if not p.is_file() or p.suffix.lower() != ".csv":
         return None
-    name = p.name.lower()
-    if "telemega" in name:
+    head = _read_first_nonempty_line(p)
+    hlow = head.lower()
+    if hlow.startswith("#version,serial,flight"):
         return "telemega"
-    if "blueraven" in name:
+    if "baro_altitude_asl_(feet)" in hlow or "baro_altitude_agl_(feet)" in hlow:
         return "blueraven"
     return None
 

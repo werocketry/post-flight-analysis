@@ -1,0 +1,38 @@
+{
+  "generated_at_utc": "2026-06-13T04:20:11Z",
+  "pfa_version": "0.1.0",
+  "schema_version": "gfr-0.1",
+  "device": {
+    "type": "telemega",
+    "serial": "6583",
+    "firmware": "6"
+  },
+  "input_files": [
+    {
+      "path": "data\\2024-06-21_hyperion1_sac24\\raw\\2024-06-21-serial-6583-flight-0004.csv",
+      "sha256": "cc5b7d65e5e122ff2bf9cba4357a1f2ccf07f58333e9833d0a1912dbf55e5354"
+    }
+  ],
+  "mapping_used": {
+    "state_name": "state",
+    "acceleration": "a_up_mps2",
+    "pressure": "pressure_pa",
+    "altitude": "alt_baro_m_msl",
+    "speed": "v_up_mps",
+    "temperature": "temperature_c",
+    "battery_voltage": "v_batt_v",
+    "nsat": "sats",
+    "latitude": "lat_deg",
+    "longitude": "lon_deg",
+    "hdop": "hdop",
+    "height": "alt_agl_m",
+    "altitude.1": "alt_gps_m_msl"
+  },
+  "units_converted": [],
+  "liftoff_method": "event",
+  "row_counts": {
+    "total": 4577,
+    "after_clean": 4577,
+    "gps_valid": 4577
+  }
+}
