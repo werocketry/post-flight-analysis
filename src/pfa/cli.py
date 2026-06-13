@@ -138,3 +138,38 @@ def preprocess(
     if not tele_file and not br_file:
         typer.echo("No TeleMega or Blue Raven CSVs detected after sniffing.")
         raise typer.Exit(code=3)
+
+
+@app.command()
+def analyze(
+    flight_dir: str = typer.Argument(..., help="Path to data/<date>_<vehicle>_<event>"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose logging"),
+) -> None:
+    """
+    Generate flight-profile plots and print summary metrics for a preprocessed flight.
+    Reads interim/*_std.csv produced by 'pfa preprocess'.
+    Saves figures to <flight_dir>/figures/.
+    """
+    import math
+    from .analyze import analyze_flight
+
+    fpath = Path(flight_dir)
+    if not (fpath / "interim").exists():
+        typer.echo(f"No interim/ directory found in {fpath}. Run 'pfa preprocess' first.")
+        raise typer.Exit(code=1)
+
+    summary = analyze_flight(fpath, verbose=verbose)
+
+    def _fmt(val: float, fmt: str = ".0f") -> str:
+        return (f"{val:{fmt}}") if not math.isnan(val) else "n/a"
+
+    typer.echo(f"\n=== {summary['flight']} ===")
+    typer.echo(f"  Sources:          {', '.join(summary['sources'])}")
+    typer.echo(f"  Apogee AGL:       {_fmt(summary['apogee_m'])} m  ({_fmt(summary['apogee_ft'])} ft)")
+    typer.echo(f"  Time to apogee:   {_fmt(summary['time_to_apogee_s'], '.1f')} s")
+    typer.echo(f"  Max velocity:     {_fmt(summary['max_velocity_mps'])} m/s  ({_fmt(summary['max_velocity_fps'])} ft/s)")
+    typer.echo(f"  Max acceleration: {_fmt(summary['max_accel_g'], '.1f')} G")
+    if not math.isnan(summary['burn_time_s']):
+        typer.echo(f"  Motor burn time:  {_fmt(summary['burn_time_s'], '.2f')} s")
+    for fig_path in summary['figures']:
+        typer.echo(f"  Saved figure:     {fig_path}")
