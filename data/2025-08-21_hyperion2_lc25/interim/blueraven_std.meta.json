@@ -1,0 +1,56 @@
+{
+  "generated_at_utc": "2026-06-13T04:15:46Z",
+  "pfa_version": "0.1.0",
+  "schema_version": "gfr-0.1",
+  "device": {
+    "type": "blueraven",
+    "serial": null,
+    "firmware": null
+  },
+  "input_files": [
+    {
+      "path": "data\\2025-08-21_hyperion2_lc25\\raw\\2025-08-21_primary_blueraven.csv",
+      "sha256": "6a2175a48937294c54d9fa28da123ff2233b75cc3211ac309b03c6bf2f9460af"
+    }
+  ],
+  "mapping_used": {
+    "Baro_Altitude_ASL_(feet)": "alt_baro_m_msl",
+    "Baro_Altitude_AGL_(feet)": "alt_agl_m",
+    "Velocity_Up": "v_up_mps",
+    "Velocity_DR": "v_dr_mps",
+    "Velocity_CR": "v_cr_mps",
+    "Inertial_Altitude": "alt_inertial_m",
+    "Inertial_DR_Position": "pos_dr_m",
+    "Inertial_CR_position": "pos_cr_m",
+    "Tilt_Angle_(deg)": "tilt_deg",
+    "Future_Angle_(deg)": "future_angle_deg",
+    "Roll_Angle_(deg)": "roll_deg",
+    "Temperature_(F)": "temperature_c",
+    "Baro_Press_(atm)": "pressure_pa",
+    "Batt_Volts": "v_batt_v",
+    "Liftoff": "flag_liftoff",
+    "Apogee": "flag_apogee",
+    "Press_Increasing": "flag_press_increasing",
+    "Burnout_Coast": "flag_burnout_coast",
+    "Apo_fired": "flag_apo_fired",
+    "Main_fired": "flag_main_fired",
+    "3rd_fired": "flag_3rd_fired",
+    "4th_fired": "flag_4th_fired",
+    "Normal_Ascent": "flag_normal_ascent",
+    "Accel_Vel_LE_0": "flag_accel_vel_le_0",
+    "ECI_Vvel_le_0": "flag_eci_vvel_le_0",
+    "Tilt Exceeded 90deg": "flag_tilt_exceeded_90deg"
+  },
+  "units_converted": [
+    "altitude_ft_to_m",
+    "velocity_ft_s_to_m_s",
+    "temperature_f_to_c",
+    "pressure_atm_to_pa"
+  ],
+  "liftoff_method": "event",
+  "row_counts": {
+    "total": 2580,
+    "after_clean": 2580,
+    "gps_valid": 0
+  }
+}
