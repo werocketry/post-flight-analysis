@@ -11,6 +11,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
   "matplotlib>=3.8",
+  "openpyxl>=3.1",
   "pandas>=2.2",
   "python-dateutil>=2.9",
   "pytz>=2024.1",

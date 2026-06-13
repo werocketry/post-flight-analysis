@@ -43,6 +43,17 @@ STANDARD_COLUMNS = [
     "device_sn",
     "fw_version",
     "schema_version",
+    # Extended: raw IMU (Blue Raven HR)
+    "accel_x_g",
+    "accel_y_g",
+    "accel_z_g",
+    "gyro_x_degps",
+    "gyro_y_degps",
+    "gyro_z_degps",
+    "quat_1",
+    "quat_2",
+    "quat_3",
+    "quat_4",
 ]
 
 

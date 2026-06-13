@@ -1,0 +1,37 @@
+{
+  "generated_at_utc": "2026-06-13T04:48:30Z",
+  "pfa_version": "0.1.0",
+  "schema_version": "gfr-0.1",
+  "device": {
+    "type": "blueraven_hr",
+    "serial": null,
+    "firmware": null
+  },
+  "input_files": [
+    {
+      "path": "data\\2025-08-21_hyperion2_lc25\\raw\\src\\WERT FBR HR_08-21-2025_14_11_45.csv",
+      "sha256": "397dc62ac0d8f12d06d23238319b6aa13bd921c4e7e0d511bb012b69dec45300"
+    }
+  ],
+  "mapping_used": {
+    "Flight_Time_(s)": "t_flight_s",
+    "Accel_X": "accel_x_g",
+    "Accel_Y": "accel_y_g",
+    "Accel_Z": "accel_z_g",
+    "Accel_Y (axial)": "a_up_mps2",
+    "Gyro_X": "gyro_x_degps",
+    "Gyro_Y": "gyro_y_degps",
+    "Gyro_Z": "gyro_z_degps",
+    "Quat_1": "quat_1",
+    "Quat_2": "quat_2",
+    "Quat_3": "quat_3",
+    "Quat_4": "quat_4"
+  },
+  "units_converted": [],
+  "liftoff_method": "device_reported",
+  "row_counts": {
+    "total": 27294,
+    "after_clean": 27294,
+    "gps_valid": 0
+  }
+}

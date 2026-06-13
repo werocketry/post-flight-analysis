@@ -1,0 +1,36 @@
+{
+  "generated_at_utc": "2026-06-13T04:48:18Z",
+  "pfa_version": "0.1.0",
+  "schema_version": "gfr-0.1",
+  "device": {
+    "type": "featherweight",
+    "serial": null,
+    "firmware": null
+  },
+  "input_files": [
+    {
+      "path": "data\\2024-06-21_hyperion1_sac24\\raw\\FthrWt03337_09-19-2024_20_12_48.xlsx",
+      "sha256": "3ab6562cf8a11f70f30fea7f89d1212c01e271e071cffe503141c4df90015dd7"
+    }
+  ],
+  "mapping_used": {
+    "DATE+TIME": "t_epoch_s",
+    "TRACKER Lat": "lat_deg",
+    "TRACKER Lon": "lon_deg",
+    "TRACKER Alt asl": "alt_gps_m_msl",
+    "VERTV": "v_up_mps",
+    "HORZV": "speed_2d_mps",
+    "BATT": "v_batt_v",
+    "TRACKER Alt asl (AGL)": "alt_agl_m"
+  },
+  "units_converted": [
+    "altitude_ft_to_m",
+    "velocity_ft_s_to_m_s"
+  ],
+  "liftoff_method": "threshold",
+  "row_counts": {
+    "total": 2583,
+    "after_clean": 2583,
+    "gps_valid": 2583
+  }
+}

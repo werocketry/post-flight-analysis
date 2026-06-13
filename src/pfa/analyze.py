@@ -13,8 +13,20 @@ _MPS_TO_FPS = 3.28084
 _G = 9.80665
 
 # Colours and labels for each data source
-_SOURCE_COLOR = {"telemega_std": "#1f77b4", "blueraven_std": "#ff7f0e"}
-_SOURCE_LABEL = {"telemega_std": "TeleMega", "blueraven_std": "Blue Raven"}
+_SOURCE_COLOR = {
+    "telemega_std":    "#1f77b4",
+    "blueraven_std":   "#ff7f0e",
+    "featherweight_std": "#2ca02c",
+    "blueraven_hr_std": "#9467bd",
+}
+_SOURCE_LABEL = {
+    "telemega_std":    "TeleMega",
+    "blueraven_std":   "Blue Raven",
+    "featherweight_std": "FeatherWeight GPS",
+    "blueraven_hr_std": "Blue Raven HR (IMU)",
+}
+# Sources that carry meaningful alt/vel data for the main plot panels
+_PLOT_SOURCES = {"telemega_std", "blueraven_std", "featherweight_std"}
 
 # TeleMega state names to watch for event transitions
 _TM_EVENT_STATES = [
@@ -50,6 +62,10 @@ def _load_interim(interim: Path) -> Dict[str, pd.DataFrame]:
     for p in sorted(interim.glob("*_std.csv")):
         datasets[p.stem] = pd.read_csv(p)
     return datasets
+
+
+# Expose as public name for CLI compare command
+load_interim = _load_interim
 
 
 def _num(df: pd.DataFrame, col: str) -> pd.Series:
@@ -222,17 +238,22 @@ def plot_flight(
 
     # ---- Collect events from primary source (TeleMega preferred) ----
     events: Dict[str, float] = {}
-    for key in ("telemega_std", "blueraven_std"):
+    for key in ("telemega_std", "blueraven_std", "featherweight_std"):
         if key in datasets:
             events = _detect_events(datasets[key])
             if events:
                 break
 
-    # ---- Plot data series ----
+    # ---- Plot altitude and velocity (skip IMU-only sources) ----
     for key, df in sorted(datasets.items()):
+        if key not in _PLOT_SOURCES:
+            continue
         t   = _num(df, "t_flight_s")
         alt = _num(df, "alt_agl_m")
         vel = _velocity_for_plot(df)
+        # Only draw if source has meaningful altitude or velocity data
+        if alt.dropna().empty and vel.dropna().empty:
+            continue
         color = _SOURCE_COLOR.get(key, "gray")
         label = _SOURCE_LABEL.get(key, key)
         mask  = t.notna() & (t >= -10)
@@ -249,6 +270,18 @@ def plot_flight(
             t[mask], acc[mask] / _G,
             color=_SOURCE_COLOR["telemega_std"], lw=1.5, label="TeleMega", zorder=3,
         )
+        # BlueRaven HR: also carries a_up_mps2 (from Accel_Y * g)
+        if "blueraven_hr_std" in datasets:
+            df_hr = datasets["blueraven_hr_std"]
+            t_hr  = _num(df_hr, "t_flight_s")
+            acc_hr = _num(df_hr, "a_up_mps2")
+            mask_hr = t_hr.notna() & (t_hr >= -10) & acc_hr.notna()
+            if mask_hr.any():
+                ax_acc.plot(
+                    t_hr[mask_hr], acc_hr[mask_hr] / _G,
+                    color=_SOURCE_COLOR["blueraven_hr_std"], lw=0.6, alpha=0.6,
+                    label="Blue Raven HR", zorder=2,
+                )
         ax_acc.axhline(0, color="k", lw=0.6, ls="--", zorder=2)
 
     # ---- Event markers ----
@@ -323,8 +356,12 @@ def analyze_flight(flight_dir: Path, verbose: bool = False) -> Dict:
         for k in datasets:
             print(f"  Loaded {k}: {len(datasets[k])} rows")
 
-    # Primary source for summary metrics: TeleMega preferred
-    primary = datasets.get("telemega_std")
+    # Primary source for summary metrics: TeleMega > BlueRaven > FeatherWeight
+    primary = None
+    for key in ("telemega_std", "blueraven_std", "featherweight_std"):
+        if key in datasets:
+            primary = datasets[key]
+            break
     if primary is None:
         primary = next(iter(datasets.values()))
     summary = compute_summary(primary)
